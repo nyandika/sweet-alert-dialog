@@ -1,5 +1,7 @@
 apply plugin: 'com.android.library'
 
+apply plugin: 'maven-publish'
+
 version = VERSION_NAME
 group = GROUP
 
@@ -17,6 +19,51 @@ android {
     buildToolsVersion '29.0.3'
 }
 
+def githubProperties = new Properties()
+githubProperties.load(new FileInputStream(rootProject.file("github.properties")))
+
+repositories {
+    maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/nyandika/materialish-progress")
+
+        credentials {
+            username = githubProperties['gpr.usr'] ?: System.getenv("GPR_USER")
+            password = githubProperties['gpr.key'] ?: System.getenv("GPR_API_KEY")
+        }
+    }
+}
+
+def getVersionName = { ->
+    return "1.4.1"
+}
+
+def getArtificatId = { ->
+    return "sweet-alert-dialog"
+}
+
+publishing {
+    publications {
+        gpr(MavenPublication) {
+            group 'com.github.nyandika'
+            artifactId getArtificatId()
+            version getVersionName()
+        }
+    }
+
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/nyandika/sweet-alert-dialog")
+
+            credentials {
+                username = githubProperties['gpr.usr'] ?: System.getenv("GPR_USER")
+                password = githubProperties['gpr.key'] ?: System.getenv("GPR_API_KEY")
+            }
+        }
+    }
+}
+
 dependencies {
-    implementation 'com.pnikosis:materialish-progress:1.7'
+    implementation 'com.pnikosis:materialishprogress:1.7.1'
 }
