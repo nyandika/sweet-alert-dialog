@@ -9,8 +9,6 @@ import android.util.TypedValue;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 
-import com.ontbee.legacyforks.cn.pedant.SweetAlert.R;
-
 public class Rotate3dAnimation extends Animation {
     private int mPivotXType = ABSOLUTE;
     private int mPivotYType = ABSOLUTE;
@@ -24,16 +22,16 @@ public class Rotate3dAnimation extends Animation {
     private Camera mCamera;
     private int mRollType;
 
-    public static final int ROLL_BY_X = 0;
-    public static final int ROLL_BY_Y = 1;
-    public static final int ROLL_BY_Z = 2;
+    private static final int ROLL_BY_X = 0;
+    private static final int ROLL_BY_Y = 1;
+    private static final int ROLL_BY_Z = 2;
 
     protected static class Description {
-        public int type;
-        public float value;
+        int type;
+        float value;
     }
 
-    Description parseValue(TypedValue value) {
+    private Description parseValue(TypedValue value) {
         Description d = new Description();
         if (value == null) {
             d.type = ABSOLUTE;

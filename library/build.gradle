@@ -1,7 +1,5 @@
 apply plugin: 'com.android.library'
 
-apply plugin: 'maven-publish'
-
 version = VERSION_NAME
 group = GROUP
 
@@ -11,12 +9,14 @@ android {
 
     defaultConfig {
         minSdkVersion 14
+        targetSdkVersion 29
+        versionCode 4
+        versionName "1.4.1"
     }
 
     lintOptions {
         abortOnError false
     }
-    buildToolsVersion '29.0.3'
 }
 
 def githubProperties = new Properties()
@@ -34,20 +34,18 @@ repositories {
     }
 }
 
-def getVersionName = { ->
-    return "1.4.1"
+dependencies {
+    implementation 'com.github.nyandika:materialish-progress:1.7.1'
 }
 
-def getArtificatId = { ->
-    return "sweet-alert-dialog"
-}
+apply from: '../maven-publish-helper.gradle'
 
 publishing {
     publications {
-        gpr(MavenPublication) {
+        release(MavenPublication) {
             group 'com.github.nyandika'
-            artifactId getArtificatId()
-            version getVersionName()
+            artifactId 'sweet-alert-dialog'
+            version android.defaultConfig.versionName
         }
     }
 
@@ -62,8 +60,4 @@ publishing {
             }
         }
     }
-}
-
-dependencies {
-    implementation 'com.pnikosis:materialishprogress:1.7.1'
 }

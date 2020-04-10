@@ -2,7 +2,6 @@ package com.ontbee.legacyforks.cn.pedant.SweetAlert;
 
 import android.content.Context;
 
-import com.ontbee.legacyforks.cn.pedant.SweetAlert.R;
 import com.pnikosis.materialishprogress.ProgressWheel;
 
 public class ProgressHelper {
@@ -17,7 +16,7 @@ public class ProgressHelper {
     private float mProgressVal;
     private int mCircleRadius;
 
-    public ProgressHelper(Context ctx) {
+    ProgressHelper(Context ctx) {
         mToSpin = true;
         mSpinSpeed = 0.75f;
         mBarWidth = ctx.getResources().getDimensionPixelSize(R.dimen.common_circle_width) + 1;
@@ -33,7 +32,7 @@ public class ProgressHelper {
         return mProgressWheel;
     }
 
-    public void setProgressWheel (ProgressWheel progressWheel) {
+    void setProgressWheel (ProgressWheel progressWheel) {
         mProgressWheel = progressWheel;
         updatePropsIfNeed();
     }

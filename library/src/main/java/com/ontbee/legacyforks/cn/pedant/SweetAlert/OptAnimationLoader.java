@@ -6,14 +6,15 @@ import android.content.res.XmlResourceParser;
 import android.util.AttributeSet;
 import android.util.Xml;
 import android.view.animation.*;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
-public class OptAnimationLoader {
+class OptAnimationLoader {
 
-    public static Animation loadAnimation(Context context, int id)
+    static Animation loadAnimation(Context context, int id)
             throws Resources.NotFoundException {
 
         XmlResourceParser parser = null;
@@ -50,32 +51,39 @@ public class OptAnimationLoader {
         int type;
         int depth = parser.getDepth();
 
-        while (((type=parser.next()) != XmlPullParser.END_TAG || parser.getDepth() > depth)
+        while (((type = parser.next()) != XmlPullParser.END_TAG || parser.getDepth() > depth)
                 && type != XmlPullParser.END_DOCUMENT) {
 
             if (type != XmlPullParser.START_TAG) {
                 continue;
             }
 
-            String  name = parser.getName();
+            String name = parser.getName();
 
-            if (name.equals("set")) {
-                anim = new AnimationSet(c, attrs);
-                createAnimationFromXml(c, parser, (AnimationSet)anim, attrs);
-            } else if (name.equals("alpha")) {
-                anim = new AlphaAnimation(c, attrs);
-            } else if (name.equals("scale")) {
-                anim = new ScaleAnimation(c, attrs);
-            }  else if (name.equals("rotate")) {
-                anim = new RotateAnimation(c, attrs);
-            }  else if (name.equals("translate")) {
-                anim = new TranslateAnimation(c, attrs);
-            } else {
-                try {
-                    anim = (Animation) Class.forName(name).getConstructor(Context.class, AttributeSet.class).newInstance(c, attrs);
-                } catch (Exception te) {
-                    throw new RuntimeException("Unknown animation name: " + parser.getName() + " error:" + te.getMessage());
-                }
+            switch (name) {
+                case "set":
+                    anim = new AnimationSet(c, attrs);
+                    createAnimationFromXml(c, parser, (AnimationSet) anim, attrs);
+                    break;
+                case "alpha":
+                    anim = new AlphaAnimation(c, attrs);
+                    break;
+                case "scale":
+                    anim = new ScaleAnimation(c, attrs);
+                    break;
+                case "rotate":
+                    anim = new RotateAnimation(c, attrs);
+                    break;
+                case "translate":
+                    anim = new TranslateAnimation(c, attrs);
+                    break;
+                default:
+                    try {
+                        anim = (Animation) Class.forName(name).getConstructor(Context.class, AttributeSet.class).newInstance(c, attrs);
+                    } catch (Exception te) {
+                        throw new RuntimeException("Unknown animation name: " + parser.getName() + " error:" + te.getMessage());
+                    }
+                    break;
             }
 
             if (parent != null) {
