@@ -23,6 +23,7 @@ android {
             shrinkResources true
         }
     }
+    buildToolsVersion '27.0.3'
 }
 
 def githubProperties = new Properties()
