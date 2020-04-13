@@ -7,7 +7,7 @@ import android.view.View;
 
 public class ViewUtils {
 
-    static Drawable[] getDrawable(View view) {
+    public static Drawable[] getDrawable(View view) {
         StateListDrawable drawable = (StateListDrawable) view.getBackground();
         DrawableContainer.DrawableContainerState dcs = (DrawableContainer.DrawableContainerState) drawable.getConstantState();
         if (dcs != null) {

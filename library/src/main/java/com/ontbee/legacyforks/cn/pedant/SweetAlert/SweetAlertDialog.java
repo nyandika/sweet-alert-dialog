@@ -9,7 +9,6 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.TypedValue;
@@ -27,6 +26,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.pnikosis.materialishprogress.ProgressWheel;
+
+import cn.pedant.SweetAlert.Constants;
+import cn.pedant.SweetAlert.ViewUtils;
 
 public class SweetAlertDialog extends Dialog implements View.OnClickListener {
     private View mDialogView;
@@ -78,7 +80,7 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
     private boolean mHideKeyBoardOnDismiss = true;
     private int contentTextSize = 0;
 
-    private static final int NORMAL_TYPE = 0;
+    public static final int NORMAL_TYPE = 0;
     public static final int ERROR_TYPE = 1;
     public static final int SUCCESS_TYPE = 2;
     public static final int WARNING_TYPE = 3;
@@ -90,10 +92,10 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
 
     //aliases
     public final static int BUTTON_CONFIRM = DialogInterface.BUTTON_POSITIVE;
-    public final static int BUTTON_CANCEL = DialogInterface.BUTTON_NEGATIVE;
+    private final static int BUTTON_CANCEL = DialogInterface.BUTTON_NEGATIVE;
 
     private final float defStrokeWidth;
-    private float strokeWidth = 0;
+    private float strokeWidth;
 
 
     public SweetAlertDialog hideConfirmButton() {
@@ -121,20 +123,6 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
         mAlertType = alertType;
         mErrorInAnim = OptAnimationLoader.loadAnimation(getContext(), R.anim.error_frame_in);
         mErrorXInAnim = (AnimationSet) OptAnimationLoader.loadAnimation(getContext(), R.anim.error_x_in);
-        // 2.3.x system don't support alpha-animation on layer-list drawable
-        // remove it from animation set
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
-            List<Animation> childAnims = mErrorXInAnim.getAnimations();
-            int idx = 0;
-            for (; idx < childAnims.size(); idx++) {
-                if (childAnims.get(idx) instanceof AlphaAnimation) {
-                    break;
-                }
-            }
-            if (idx < childAnims.size()) {
-                childAnims.remove(idx);
-            }
-        }
         mSuccessBowAnim = OptAnimationLoader.loadAnimation(getContext(), R.anim.success_bow_roate);
         mSuccessLayoutAnimSet = (AnimationSet) OptAnimationLoader.loadAnimation(getContext(), R.anim.success_mask_layout);
         mModalInAnim = (AnimationSet) OptAnimationLoader.loadAnimation(getContext(), R.anim.modal_in);
@@ -340,7 +328,7 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
         return setTitleText(getContext().getResources().getString(resId));
     }
 
-    public SweetAlertDialog setCustomImage(Drawable drawable) {
+    private SweetAlertDialog setCustomImage(Drawable drawable) {
         mCustomImgDrawable = drawable;
         if (mCustomImage != null && mCustomImgDrawable != null) {
             mCustomImage.setVisibility(View.VISIBLE);
@@ -374,7 +362,7 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
         return this;
     }
 
-    public static int spToPx(float sp, Context context) {
+    private static int spToPx(float sp, Context context) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, context.getResources().getDisplayMetrics());
     }
 
@@ -411,7 +399,7 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
         return mShowContent;
     }
 
-    public SweetAlertDialog showContentText(boolean isShow) {
+    private SweetAlertDialog showContentText(boolean isShow) {
         mShowContent = isShow;
         if (mContentTextView != null) {
             mContentTextView.setVisibility(mShowContent ? View.VISIBLE : View.GONE);
@@ -488,13 +476,13 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
     }
 
     private int genStrokeColor(int color) {
-        float hsv[] = new float[3];
+        float[] hsv = new float[3];
         Color.colorToHSV(color, hsv);
         hsv[2] *= 0.7f; // decrease value component
         return Color.HSVToColor(hsv);
     }
 
-    public SweetAlertDialog setConfirmButtonTextColor(Integer color) {
+    private SweetAlertDialog setConfirmButtonTextColor(Integer color) {
         mConfirmButtonTextColor = color;
         if (mConfirmButton != null && color != null) {
             mConfirmButton.setTextColor(mConfirmButtonTextColor);
@@ -506,7 +494,7 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
         return mConfirmButtonTextColor;
     }
 
-    public SweetAlertDialog setNeutralButtonTextColor(Integer color) {
+    private SweetAlertDialog setNeutralButtonTextColor(Integer color) {
         mNeutralButtonTextColor = color;
         if (mNeutralButton != null && color != null) {
             mNeutralButton.setTextColor(mNeutralButtonTextColor);
@@ -518,7 +506,7 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
         return mNeutralButtonTextColor;
     }
 
-    public SweetAlertDialog setCancelButtonTextColor(Integer color) {
+    private SweetAlertDialog setCancelButtonTextColor(Integer color) {
         mCancelButtonTextColor = color;
         if (mCancelButton != null && color != null) {
             mCancelButton.setTextColor(mCancelButtonTextColor);
@@ -549,7 +537,7 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
         return this;
     }
 
-    public SweetAlertDialog setNeutralClickListener(OnSweetClickListener listener) {
+    private SweetAlertDialog setNeutralClickListener(OnSweetClickListener listener) {
         mNeutralClickListener = listener;
         return this;
     }
